@@ -6,7 +6,7 @@ from rest_framework.serializers import StringRelatedField
 class AuthorModelSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Author
-        exclude = ['url', 'email']
+        exclude = ['url']
 
 class BiographyModelSerializer(HyperlinkedModelSerializer):
     author = AuthorModelSerializer()

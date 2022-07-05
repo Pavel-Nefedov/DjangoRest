@@ -1,5 +1,11 @@
 from django.shortcuts import render
+from rest_framework import generics
+
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
+
 from .models import Author, Book, Biography, Article
 from .serializers import AuthorModelSerializer, ArticleModelSerializer, BookModelSerializer, BiographyModelSerializer
 
@@ -22,3 +28,6 @@ class BiographyViewSet(ModelViewSet):
 class ArticleViewSet(ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleModelSerializer
+
+
+
