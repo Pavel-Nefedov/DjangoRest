@@ -1,17 +1,18 @@
 import React from 'react';
 import axios from "axios";
-import logo from './logo.svg';
 import './App.css';
-import {HashRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
+import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 
 import AuthorList from "./components/Author";
 import BookList from './components/Book.js'
-import UsersList from "./components/User";
-import FooterList from "./components/Footer";
-import MenuList from "./components/Menu";
 import AuthorBookList from "./components/AuthorBook";
-import ToDosList from "./components/ToDo";
-import ProjectsList from "./components/Project";
+// import UsersList from "./components/User";
+// import FooterList from "./components/Footer";
+// import MenuList from "./components/Menu";
+// import ToDosList from "./components/ToDo";
+// import ProjectsList from "./components/Project";
+import LoginForm from "./components/Auth";
+import Cookies from 'universal-cookie';
 
 const NotFound404 = ({ location }) => {
     return (
@@ -42,54 +43,70 @@ class App extends React.Component {
         }
     }
 
+
+    set_token(token){
+        const cookies = new Cookies()
+        cookies.set('token', token)
+        this.setState({'token': token}, ()=>this.load_data())
+    }
+
+    is_authenticated() {
+        return this.state.token !== ''
+    }
+
+    logout(){
+        this.set_token('')
+    }
+
+    get_token_from_storage() {
+        const cookies = new Cookies()
+        const token = cookies.get('token')
+        this.setState({'token': token}, ()=>this.load_data())
+    }
+
+    get_token(username, password) {
+        axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username, password: password})
+        .then(response => {
+            this.set_token(response.data['token'])
+        }).catch(error => alert('Неверный логин или пароль'))
+    }
+
+    get_headers() {
+        let headers = {
+            'Content-Type': 'application/json'
+        }
+    if (this.is_authenticated()) {
+            headers['Authorization'] = 'Token ' + this.state.token
+        }
+        return headers
+    }
+
+    load_data() {
+        const headers = this.get_headers()
+        axios.get('http://127.0.0.1:8000/api/authors/', {headers})
+            .then(response => {
+                this.setState({authors: response.data})
+            }).catch(error => console.log(error))
+
+        axios.get('http://127.0.0.1:8000/api/books/')
+            .then(response => {
+                this.setState({books: response.data})
+            }).catch(error => {
+            console.log(error)
+            this.setState({books: []})
+        })
+    }
+
+
+
     componentDidMount() {
-        axios.get('http://127.0.0.1:8000/api/menus/')
-            .then(response => {
-                const menus = response.data
-                    this.setState(
-               {
-                        'menus': menus
-                    }
-                )
-            }).catch(error => console.log(error));
-
-        axios.get('http://127.0.0.1:8000/api/authors/')
-            .then(response => {
-                const authors = response.data
-                    this.setState(
-               {
-                        'authors': authors
-                    }
-                )
-            }).catch(error => console.log(error));
-
-        axios.get('http://127.0.0.1:8000/api/users/')
-            .then(response => {
-                const users = response.data
-                    this.setState(
-               {
-                        'users': users
-                    }
-                )
-            }).catch(error => console.log(error));
-
-        axios.get('http://127.0.0.1:8000/api/footers/')
-            .then(response => {
-                const footers = response.data
-                    this.setState(
-               {
-                        'footers': footers
-                    }
-                )
-            }).catch(error => console.log(error));
-
-
+        this.get_token_from_storage()
     }
 
     render() {
         return (
             <div>
-                <HashRouter>
+                <BrowserRouter>
                     <nav>
                         <ul>
                             <li>
@@ -107,37 +124,31 @@ class App extends React.Component {
                             <li>
                                 <Link to='/ToDos'>ToDos</Link>
                             </li>
+                            <li>
+                                {this.is_authenticated() ? <button onClick={()=>this.logout()}>Logout</button> :
+                                <Link to='/login'>Login</Link>}
+                            </li>
+
                         </ul>
                     </nav>
                     <Switch>
 
                         <Route exact path='/' component={() => <AuthorList items={this.state.authors} />} />
                         <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+                        <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
+                        <Route path="/author/:id">
 
-                        <Route exact path='/users' component={() => <UsersList users={this.state.users}/>}/>
-                        <Route exact path='/ToDos' component={() => <ToDosList ToDos={this.state.ToDos}/>}/>
-                        <Route exact path='/projects' component={() => <ProjectsList projects={this.state.projects}/>}/>
-
-
+                        {/*<Route exact path='/users' component={() => <UsersList users={this.state.users}/>}/>*/}
+                        {/*<Route exact path='/ToDos' component={() => <ToDosList ToDos={this.state.ToDos}/>}/>*/}
+                        {/*<Route exact path='/projects' component={() => <ProjectsList projects={this.state.projects}/>}/>*/}
+                            <AuthorBookList items={this.state.books} />
+                        </Route>
                         <Redirect from='/authors' to='/' />
                         <Route component={NotFound404} />
                     </Switch>
-                </HashRouter>
+                </BrowserRouter>
             </div>
 
-            // <div>
-            //     Меню
-            //     <MenuList menus={this.state.menus} />
-            //     <br/>
-            //     Список авторов
-            //     <AuthorList authors={this.state.authors} />
-            //     <br/>
-            //     Список пользователей
-            //     <UsersList users={this.state.users} />
-            //     <br/>
-            //     Подвавл
-            //     <FooterList footers={this.state.footers} />
-            // </div>
         )
     }
 }
