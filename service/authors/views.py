@@ -8,12 +8,19 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Author, Book, Biography, Article
 from .serializers import AuthorModelSerializer, ArticleModelSerializer, BookModelSerializer, \
-    BiographyModelSerializer, BookSerializerNew
+    BiographyModelSerializer, BookSerializerNew, AuthorNameSerializer
 
 
-class AuthorViewSet(ModelViewSet):
+# class AuthorViewSet(ModelViewSet):
+class AuthorViewSet(generics.ListAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer
+
+    def get_serializer_class(self):
+        print(self.request.version)
+        if self.request.version == '1':
+            return AuthorNameSerializer
+        return AuthorModelSerializer
 
 
 class BookViewSet(ModelViewSet):
@@ -24,7 +31,6 @@ class BookViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method in ['GET']:
             return BookSerializerNew
-
         return BookModelSerializer
 
 
