@@ -10,9 +10,8 @@ from .models import Author, Book, Biography, Article
 from .serializers import AuthorModelSerializer, ArticleModelSerializer, BookModelSerializer, \
     BiographyModelSerializer, BookSerializerNew, AuthorNameSerializer
 
-
-# class AuthorViewSet(ModelViewSet):
-class AuthorViewSet(generics.ListAPIView):
+# class AuthorViewSet(generics.ListAPIView):
+class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer
 

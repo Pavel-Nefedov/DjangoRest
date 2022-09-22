@@ -19,14 +19,16 @@ from django.urls import path, include, re_path
 from rest_framework import views, permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
+from graphene_django.views import GraphQLView
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from authors.views import AuthorViewSet, BiographyViewSet, BookViewSet, ArticleViewSet
 from usersapp.views import UserViewSet, UserListApiView, UserRetrieveApiView, UserUpdateApiView
 from menuapp.views import MenuViewSet
 from footerapp.views import FooterViewSet
 from todolist.views import TODOViewSet, ProjectAPIDetailView, ProjectViewSet, TODOAPIDetailView
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+
 
 router = DefaultRouter()
 
@@ -36,7 +38,7 @@ router.register('authors', AuthorViewSet)
 router.register('books', BookViewSet)
 router.register('articles', ArticleViewSet)
 router.register('biographies', BiographyViewSet)
-router.register('users', UserViewSet)
+router.register('user2s', UserViewSet)
 router.register('menus', MenuViewSet)
 router.register('footers', FooterViewSet)
 
@@ -66,13 +68,15 @@ urlpatterns = [
     path('api/v1/auth/', include('djoser.urls')),
 
 
+    path("graphql/", GraphQLView.as_view(graphiql=True)),
+
     re_path(r'^auth/', include('djoser.urls.authtoken')),
 #     re_path(r'^api/(?P<version>\d)/authors/$', AuthorViewSet.as_view()),
 #
 #     path('api/authors/1', include('authors.urls', namespace='1')),
 #     path('api/authors/2', include('authors.urls', namespace='2')),
 
-    # path('api/authors/', UserListApiView.as_view()),
+    # path('api/users/', UserListApiView.as_view()),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
