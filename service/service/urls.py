@@ -31,14 +31,13 @@ from todolist.views import TODOViewSet, ProjectAPIDetailView, ProjectViewSet, TO
 
 
 router = DefaultRouter()
-
 router.register('TODO', TODOViewSet)
 router.register('projects', ProjectViewSet)
 router.register('authors', AuthorViewSet)
 router.register('books', BookViewSet)
 router.register('articles', ArticleViewSet)
 router.register('biographies', BiographyViewSet)
-router.register('user2s', UserViewSet)
+router.register('users', UserViewSet)
 router.register('menus', MenuViewSet)
 router.register('footers', FooterViewSet)
 

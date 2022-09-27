@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.serializers import StringRelatedField
 
 
-class AuthorModelSerializer(serializers.ModelSerializer):
+class AuthorModelSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Author
         # exclude = ['url']
@@ -17,7 +17,8 @@ class AuthorNameSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name')
 
 
-class BookSerializerNew(serializers.ModelSerializer):
+
+class BookSerializerNew(HyperlinkedModelSerializer):
     author = AuthorModelSerializer()
     class Meta:
         model = Book
@@ -25,23 +26,22 @@ class BookSerializerNew(serializers.ModelSerializer):
 
 
 class BookModelSerializer(HyperlinkedModelSerializer):
-    #authors = StringRelatedField(many=True)
-    authors = AuthorModelSerializer(many=True)
-
+    authors = StringRelatedField(many=True)
+    # authors = AuthorModelSerializer(many=True)
     class Meta:
         model = Book
         fields = '__all__'
 
 
+
 class ArticleModelSerializer(HyperlinkedModelSerializer):
+    author = AuthorModelSerializer()
     class Meta:
         model = Article
         fields = '__all__'
 
 
 class BiographyModelSerializer(HyperlinkedModelSerializer):
-    author = AuthorModelSerializer()
-
     class Meta:
         model = Biography
         fields = '__all__'

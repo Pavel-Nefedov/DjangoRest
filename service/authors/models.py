@@ -4,13 +4,12 @@ from django.db import models
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64)
     birthday_year = models.PositiveIntegerField()
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.name
 
 
 class Biography(models.Model):
@@ -24,4 +23,4 @@ class Book(models.Model):
 
 class Article(models.Model):
     name = models.CharField(max_length=32)
-    author = models.ForeignKey(Author, models.PROTECT)
+    author = models.OneToOneField(Author, on_delete=models.CASCADE)
