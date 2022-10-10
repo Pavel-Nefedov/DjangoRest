@@ -7,7 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 
 
 from .models import Author, Book, Biography, Article
-from .serializers import AuthorModelSerializer, ArticleModelSerializer, BookModelSerializer, BiographyModelSerializer
+from .serializers import AuthorModelSerializer, ArticleModelSerializer, BookModelSerializer, \
+    BiographyModelSerializer, BookSerializerNew
 
 
 class AuthorViewSet(ModelViewSet):
@@ -16,9 +17,15 @@ class AuthorViewSet(ModelViewSet):
 
 
 class BookViewSet(ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     queryset = Book.objects.all()
     serializer_class = BookModelSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return BookSerializerNew
+
+        return BookModelSerializer
 
 
 class BiographyViewSet(ModelViewSet):
