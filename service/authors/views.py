@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -16,6 +16,7 @@ class AuthorViewSet(ModelViewSet):
 
 
 class BookViewSet(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Book.objects.all()
     serializer_class = BookModelSerializer
 
