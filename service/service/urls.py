@@ -13,10 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import views
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
 
 from authors.views import AuthorViewSet, BiographyViewSet, BookViewSet, ArticleViewSet
 from usersapp.views import UserViewSet, UserListApiView, UserRetrieveApiView, UserUpdateApiView
@@ -47,6 +49,9 @@ urlpatterns = [
     path('user_update/<int:pk>/', UserUpdateApiView.as_view()),
     path('user_retrieve/<int:pk>/', UserRetrieveApiView.as_view()),
     path('project_detail/<int:pk>/', ProjectAPIDetailView.as_view()),
-    path('todo_detail/<int:pk>/', TODOAPIDetailView.as_view())
+    path('todo_detail/<int:pk>/', TODOAPIDetailView.as_view()),
+    path('api-token-auth/', views.obtain_auth_token),
+    path('api/v1/auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
 
 ]
