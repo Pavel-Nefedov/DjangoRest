@@ -17,13 +17,19 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from authors.views import AuthorViewSet
+from authors.views import AuthorViewSet, BiographyViewSet, BookViewSet, ArticleViewSet
 from usersapp.views import UserViewSet
 from menuapp.views import MenuViewSet
 from footerapp.views import FooterViewSet
+from todolist.views import TODOViewSet, ProjectViewSet
 
 router = DefaultRouter()
+router.register('TODO', TODOViewSet)
+router.register('projects', ProjectViewSet)
 router.register('authors', AuthorViewSet)
+router.register('books', BookViewSet)
+router.register('articles', ArticleViewSet)
+router.register('biographies', BiographyViewSet)
 router.register('users', UserViewSet)
 router.register('menus', MenuViewSet)
 router.register('footers', FooterViewSet)
