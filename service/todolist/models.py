@@ -3,12 +3,14 @@ from django.db import models
 from usersapp.models import User
 
 class Project(models.Model):
-    uid = models.UUIDField(primary_key=True, default=uuid4)
+    id = models.BigAutoField(primary_key=True)
+    uid = models.UUIDField(default=uuid4)
     name = models.CharField(max_length=100)
     users = models.ManyToManyField(User)
 
 
 class TODO(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.TextField(verbose_name='Заметка', blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
