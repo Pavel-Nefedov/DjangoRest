@@ -11,3 +11,13 @@ class UserModelSerializer(HyperlinkedModelSerializer):
             'lastname',
             'email',
             ]
+
+
+class UserAPISerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'is_superuser',
+            'is_staff',
+            ]

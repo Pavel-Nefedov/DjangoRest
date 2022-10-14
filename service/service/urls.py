@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include, re_path
-from rest_framework import views
+from rest_framework import views, permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 
@@ -25,6 +25,8 @@ from usersapp.views import UserViewSet, UserListApiView, UserRetrieveApiView, Us
 from menuapp.views import MenuViewSet
 from footerapp.views import FooterViewSet
 from todolist.views import TODOViewSet, ProjectAPIDetailView, ProjectViewSet, TODOAPIDetailView
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 router = DefaultRouter()
 
@@ -38,8 +40,18 @@ router.register('users', UserViewSet)
 router.register('menus', MenuViewSet)
 router.register('footers', FooterViewSet)
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Library",
+        default_version='0.1',
+        description="Documentation to out project",
+        contact=openapi.Contact(email="admin@admin.local"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 
-
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,6 +64,19 @@ urlpatterns = [
     path('todo_detail/<int:pk>/', TODOAPIDetailView.as_view()),
     path('api-token-auth/', views.obtain_auth_token),
     path('api/v1/auth/', include('djoser.urls')),
+
+
     re_path(r'^auth/', include('djoser.urls.authtoken')),
+#     re_path(r'^api/(?P<version>\d)/authors/$', AuthorViewSet.as_view()),
+#
+#     path('api/authors/1', include('authors.urls', namespace='1')),
+#     path('api/authors/2', include('authors.urls', namespace='2')),
+
+    # path('api/authors/', UserListApiView.as_view()),
+
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+
 
 ]

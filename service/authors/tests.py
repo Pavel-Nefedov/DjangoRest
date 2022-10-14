@@ -115,4 +115,3 @@ class TestBookViewSet(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         author = Author.objects.get(id=author.id)
         self.assertEqual(author.first_name, 'Санёк')
-
