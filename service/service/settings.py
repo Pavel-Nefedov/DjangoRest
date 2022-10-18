@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'drf_yasg',
+    'graphene_django'
 
 ]
 
@@ -160,5 +161,9 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
 'http://localhost:3000',
 ]
+
+GRAPHENE = {
+"SCHEMA": "service.schema.schema"
+}
 
 
