@@ -97,8 +97,12 @@ WSGI_APPLICATION = 'service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'library',
+        'USER': 'dante',
+        'PASSWORD': 'dante123456',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -159,11 +163,16 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-'http://localhost:3000',
+    'http://localhost:8000',
+    'http://localhost:80',
+    'http://localhost:8080',
+    'http://localhost:3000',
 ]
 
 GRAPHENE = {
 "SCHEMA": "service.schema.schema"
 }
 
-
+import django
+from django.utils.encoding import force_str
+django.utils.encoding.force_text = force_str

@@ -1,29 +1,34 @@
 import React from 'react'
+import {Link} from "react-router-dom";
 
 
-const BookItem = ({item}) => {
+const BookItem = ({item, deleteBook}) => {
     return (
         <tr>
             <td>{item.id}</td>
             <td>{item.name}</td>
-            <td>{item.author.last_name} {item.author.first_name}</td>
+            <td>{item.author}</td>
+            <td><button onClick={()=>deleteBook(item.id)} type='button'>Delete</button></td>
         </tr>
     )
 }
 
 
-const BookList = ({items}) => {
+const BookList = ({items, deleteBook}) => {
     return (
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>AUTHOR</th>
-            </tr>
-            {items.map((item) => <BookItem item={item} />)}
-        </table>
+        <div>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>AUTHOR</th>
+                    <th></th>
+                </tr>
+                {items.map((item) => <BookItem item={item} deleteBook={deleteBook} />)}
+            </table>
+            <Link to='/books/create'>Create</Link>
+        </div>
     )
 }
-
 
 export default BookList
